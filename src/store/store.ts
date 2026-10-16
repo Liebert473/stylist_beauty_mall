@@ -164,7 +164,7 @@ export const initialState = (): Omit<DemoState, 'chapter' | 'step' | 'notesOpen'
   topups: seedTopups(),
   booking: emptyBooking(),
   vipBooking: { services: [], stylist: '', date: '', time: '', payWallet: true, submitted: false },
-  topup: { amount: 0, account: 'kbzpay', screenshot: false, txId: '', submitted: false },
+  topup: { amount: 0, account: 'kbzpay', screenshot: false, note: '', submitted: false },
   checkout: { client: '', booking: null, services: [], stylist: '', payWallet: true, done: null },
   invite: { name: '', phone: '', username: '', tier: 'silver', created: null },
   adminUi: {

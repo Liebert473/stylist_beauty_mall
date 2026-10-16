@@ -194,7 +194,8 @@ export interface TopupRequest {
   client: string
   amount: number
   account: string
-  txId: string
+  /** optional reference or note from the VIP */
+  note: string
   when: string
   status: 'pending' | 'approved' | 'rejected'
 }
@@ -239,7 +240,8 @@ export interface TopupForm {
   amount: number
   account: string
   screenshot: boolean
-  txId: string
+  /** optional reference or note */
+  note: string
   submitted: boolean
 }
 

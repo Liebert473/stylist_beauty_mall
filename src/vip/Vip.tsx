@@ -45,7 +45,7 @@ import { useScrollToFlash } from '../site/Site'
 import { DAYS } from '../site/BookPage'
 import { Monogram, Wordmark } from '../ui/Logo'
 import { Photo } from '../ui/Photo'
-import { Receipt } from '../ui/Receipt'
+import { Receipt, SAMPLE_TX } from '../ui/Receipt'
 import { fmtLong, fmtParts, fmtShort, money } from '../ui/format'
 
 export const goVip = (page: VipPage) => demo().update((s) => void (s.vipPage = page))
@@ -431,13 +431,13 @@ function TopupScreen() {
         {f.screenshot ? (
           <div className="flex items-center gap-3">
             <motion.div initial={{ scale: 0.6 }} animate={{ scale: 1 }} className="h-24 w-14 shrink-0 overflow-hidden rounded-lg ring-1 ring-cocoa/15">
-              <Receipt amount={f.amount} txId={f.txId} small />
+              <Receipt amount={f.amount} txId={SAMPLE_TX} small />
             </motion.div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-1 text-[12.5px] font-semibold text-emerald-700">
                 <Check size={14} /> Screenshot attached
               </div>
-              <input data-demo="v:txid" className={`${input} py-2 text-[14px]`} placeholder="Transaction ID" value={f.txId} onChange={(e) => setTopupForm('txId', e.target.value)} />
+              <input data-demo="v:note" className={`${input} py-2 text-[14px]`} placeholder="Reference / note (optional)" value={f.note} onChange={(e) => setTopupForm('note', e.target.value)} />
             </div>
           </div>
         ) : (
@@ -453,7 +453,7 @@ function TopupScreen() {
       </div>
       <button
         data-demo="v:topup-submit"
-        disabled={!f.amount || !f.screenshot || !f.txId}
+        disabled={!f.amount || !f.screenshot}
         onClick={() => submitTopup()}
         className="w-full rounded-full bg-cocoa py-3.5 text-[14px] font-semibold tracking-[0.12em] text-gold uppercase disabled:opacity-40"
       >

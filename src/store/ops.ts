@@ -258,7 +258,7 @@ export function submitTopup(id = uid('t')) {
   demo().update((s) => {
     const f = s.topup
     if (!s.vip.session) return
-    s.topups.unshift({ id, client: s.vip.session, amount: f.amount, account: f.account, txId: f.txId, when: iso(0), status: 'pending' })
+    s.topups.unshift({ id, client: s.vip.session, amount: f.amount, account: f.account, note: f.note.trim(), when: iso(0), status: 'pending' })
     f.submitted = true
     s.adminUi.selectedTopup = id
   })
@@ -272,7 +272,7 @@ export function approveTopup(id: string) {
     t.status = 'approved'
     const acc = s.content.rewards.accounts.find((a) => a.id === t.account)?.name ?? 'Transfer'
     const bonus = bonusFor(s.content, t.amount)
-    addLine(s, { client: t.client, kind: 'topup', bucket: 'paid', amount: t.amount, note: `${acc} transfer · ${t.txId}`, by: 'Front desk' })
+    addLine(s, { client: t.client, kind: 'topup', bucket: 'paid', amount: t.amount, note: t.note ? `${acc} transfer · “${t.note}”` : `${acc} transfer`, by: 'Front desk' })
     if (bonus) addLine(s, { client: t.client, kind: 'bonus', bucket: 'reward', amount: bonus, note: `Top-up bonus ${money(t.amount)}`, by: 'Automatic' })
     notify(s, { kind: 'topup', title: 'Top-up approved', text: `${money(t.amount + bonus)} added${bonus ? ` (incl. ${money(bonus)} bonus)` : ''}` })
     s.flash = { paths: ['vip.balance', 'vip.notices'], nonce: s.flash.nonce + 1, at: Date.now() }

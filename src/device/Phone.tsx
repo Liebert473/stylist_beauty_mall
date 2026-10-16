@@ -37,7 +37,7 @@ import { Site } from '../site/Site'
 import { Vip } from '../vip/Vip'
 import { Badge, Monogram, Wordmark } from '../ui/Logo'
 import { Photo } from '../ui/Photo'
-import { Receipt } from '../ui/Receipt'
+import { Receipt, SAMPLE_TX } from '../ui/Receipt'
 
 export const PHONE_W = 390
 export const PHONE_H = 844
@@ -160,7 +160,7 @@ function PhotoPicker() {
         <div className="grid grid-cols-3 gap-0.5">
           <button data-demo="p:photo-receipt" onClick={pick} className="relative aspect-square overflow-hidden">
             <div className="absolute inset-0 origin-top scale-[1] p-0">
-              <Receipt amount={amount} txId="0123 4567 8901" small />
+              <Receipt amount={amount} txId={SAMPLE_TX} small />
             </div>
           </button>
           {['hair-color', 'nails', 'promo-festival', 'hero-hair', 'pedicure', 'vip-gift', 'bridal', 'products'].map((p) => (

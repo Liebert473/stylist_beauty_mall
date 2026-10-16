@@ -1,6 +1,9 @@
 import { CheckCircle2 } from 'lucide-react'
 import { money } from './format'
 
+/** Transaction number printed on the sample banking screenshot (part of the image, not typed by the VIP). */
+export const SAMPLE_TX = '0912 3344 5566'
+
 /** A generic mobile-banking "transfer successful" screenshot — what VIPs upload with a transfer top-up. */
 export function Receipt({ amount, txId, to = 'Stylist Beauty Mall', small }: { amount: number; txId: string; to?: string; small?: boolean }) {
   return (
@@ -12,7 +15,7 @@ export function Receipt({ amount, txId, to = 'Stylist Beauty Mall', small }: { a
       <div className={`w-full rounded bg-white/95 text-zinc-700 ${small ? 'mt-1 space-y-[1px] p-1' : 'mt-5 space-y-2 rounded-xl p-4'}`}>
         {[
           ['To', to],
-          ['Transaction ID', txId || '0123 4567 8901'],
+          ['Transaction ID', txId],
           ['Date', new Date().toLocaleDateString('en-GB')],
         ].map(([k, v]) => (
           <div key={k} className="flex justify-between gap-2">

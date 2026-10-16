@@ -148,7 +148,7 @@ const L = (when: number, kind: LedgerLine['kind'], bucket: LedgerLine['bucket'],
 const SUMON_HISTORY = [
   L(-15, 'topup', 'paid', 500000, 'Cash at counter'),
   L(-15, 'bonus', 'reward', 35000, 'Top-up bonus 500,000 Ks', 'Automatic'),
-  L(-15, 'topup', 'paid', 300000, 'KBZPay transfer · 0912 3344 5566'),
+  L(-15, 'topup', 'paid', 300000, 'KBZPay transfer'),
   L(-15, 'bonus', 'reward', 15000, 'Top-up bonus 300,000 Ks', 'Automatic'),
   L(-8, 'payment', 'reward', -50000, 'Colour & balayage, Hair spa, Pure water wash'),
   L(-8, 'payment', 'paid', -160000, 'Colour & balayage, Hair spa, Pure water wash'),
@@ -467,7 +467,7 @@ export const CHAPTERS: Chapter[] = [
       {
         title: 'Transfer + screenshot',
         caption: 'Or she transfers from her phone and uploads the screenshot',
-        notes: ['The salon’s KBZPay, AYA Pay and bank accounts are shown in the VIP area.', 'Screenshot and transaction ID go to the Studio for approval.'],
+        notes: ['The salon’s KBZPay, AYA Pay and bank accounts are shown in the VIP area.', 'The screenshot goes to the Studio for approval; a reference or note is optional.'],
         view: { admin: 'wallet', vip: 'home' },
         script: [
           tap('v:topup', () => goVip('topup')),
@@ -478,7 +478,7 @@ export const CHAPTERS: Chapter[] = [
             setTopupForm('screenshot', true)
             demo().update((s) => void (s.phone.overlay = null))
           }),
-          field('v:txid', '0912 3344 5566', (v) => setTopupForm('txId', v)),
+          field('v:note', 'For my next visits', (v) => setTopupForm('note', v)),
           tap('v:topup-submit', () => submitTopup('t-sumon')),
           wait(800),
         ],
@@ -486,7 +486,7 @@ export const CHAPTERS: Chapter[] = [
       {
         title: 'Approve',
         caption: 'The front desk checks the money arrived — approve — done',
-        notes: ['Each transaction ID can only be used once.', 'Every wallet line is permanent and shows who did it.'],
+        notes: ['Staff compare the screenshot with the salon’s KBZPay app, then approve.', 'Every wallet line is permanent and shows who did it.'],
         view: { admin: 'wallet', vip: 'topup' },
         script: [
           point('a:approve'),

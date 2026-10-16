@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Banknote, Check, Lock, X } from 'lucide-react'
 import { demo, useDemo } from '../store/store'
 import { approveTopup, balance, bonusFor, cashTopup, clientById } from '../store/ops'
-import { Receipt } from '../ui/Receipt'
+import { Receipt, SAMPLE_TX } from '../ui/Receipt'
 import { fmtShort, money } from '../ui/format'
 import { Avatar, Card, Pill } from './ui'
 
@@ -26,7 +26,7 @@ function Approvals() {
           return (
             <motion.div key={t.id} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }} className="flex gap-4 rounded-xl border border-amber-200 bg-amber-50/60 p-3">
               <div className="h-[168px] w-[96px] shrink-0 overflow-hidden rounded-lg shadow ring-1 ring-black/10">
-                <Receipt amount={t.amount} txId={t.txId} small />
+                <Receipt amount={t.amount} txId={SAMPLE_TX} small />
               </div>
               <div className="flex-1 space-y-1 text-[13.5px]">
                 <div className="flex items-center gap-2">
@@ -38,8 +38,12 @@ function Approvals() {
                   <b>{money(t.amount)}</b>
                   <span className="text-zinc-500">To account</span>
                   <span>{acc?.name}</span>
-                  <span className="text-zinc-500">Transaction ID</span>
-                  <span className="font-mono">{t.txId}</span>
+                  {t.note && (
+                    <>
+                      <span className="text-zinc-500">Reference / note</span>
+                      <span>“{t.note}”</span>
+                    </>
+                  )}
                   <span className="text-zinc-500">Bonus on approval</span>
                   <span className="font-semibold text-emerald-700">+{money(bonus)}</span>
                 </div>
@@ -51,7 +55,7 @@ function Approvals() {
                     <X size={15} /> Reject
                   </button>
                 </div>
-                <div className="text-[11.5px] text-zinc-500">Check the transfer in the salon’s {acc?.name} app first. Each transaction ID can only be used once.</div>
+                <div className="text-[11.5px] text-zinc-500">Compare the screenshot with the salon’s {acc?.name} app before approving.</div>
               </div>
             </motion.div>
           )

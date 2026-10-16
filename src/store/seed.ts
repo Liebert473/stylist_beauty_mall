@@ -220,5 +220,5 @@ export const seedBookings = (): Booking[] => [
 ]
 
 export const seedTopups = (): TopupRequest[] => [
-  { id: 't0', client: 'c-khin', amount: 500000, account: 'kbzpay', txId: '0123 4567 8901', when: iso(-30), status: 'approved' },
+  { id: 't0', client: 'c-khin', amount: 500000, account: 'kbzpay', note: '', when: iso(-30), status: 'approved' },
 ]
