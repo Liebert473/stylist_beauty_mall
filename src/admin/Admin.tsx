@@ -156,8 +156,8 @@ export function Admin() {
         </header>
 
         <main data-scroll className="thin-scrollbar flex-1 overflow-y-auto">
-          <AnimatePresence mode="wait">
-            <motion.div key={active} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="mx-auto max-w-[1000px] space-y-4 p-5">
+          {/* fade in only: an exit animation can get stuck when a step jump switches sections twice in a row */}
+          <motion.div key={active} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }} className="mx-auto max-w-[1000px] space-y-4 p-5">
               {active === 'today' && <Today />}
               {active === 'bookings' && <Bookings />}
               {active === 'checkout' && <Checkout />}
@@ -170,8 +170,7 @@ export function Admin() {
               {active === 'team' && <TeamEditor />}
               {active === 'gallery' && <GalleryEditor />}
               {active === 'news' && <NewsEditor />}
-            </motion.div>
-          </AnimatePresence>
+          </motion.div>
         </main>
 
         <div className="pointer-events-none absolute right-5 bottom-5 z-50 space-y-2">

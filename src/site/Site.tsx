@@ -114,8 +114,8 @@ export function Site() {
           </AnimatePresence>
         </header>
 
-        <AnimatePresence mode="wait">
-          <motion.main key={page} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
+        {/* fade in only: an exit animation can get stuck when a step jump switches pages twice in a row */}
+        <motion.main key={page} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.22 }}>
             {page === 'home' && <HomePage />}
             {page === 'services' && <ServicesPage />}
             {page === 'scalp' && <ScalpPage />}
@@ -125,8 +125,7 @@ export function Site() {
             {page === 'news' && <NewsPage />}
             {page === 'contact' && <ContactPage />}
             {page === 'book' && <BookPage />}
-          </motion.main>
-        </AnimatePresence>
+        </motion.main>
 
         <Footer />
       </div>

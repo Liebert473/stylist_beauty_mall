@@ -713,8 +713,8 @@ export function Vip() {
           </header>
         )}
         <div ref={scroller} data-site-scroll className="no-scrollbar min-h-0 flex-1 overflow-y-auto">
-          <AnimatePresence mode="wait">
-            <motion.div key={signedIn ? page : `out-${page}`} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="min-h-full">
+          {/* fade in only: an exit animation can get stuck when a step jump switches screens twice in a row */}
+          <motion.div key={signedIn ? page : `out-${page}`} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2 }} className="min-h-full">
               {page === 'setup' && <Setup />}
               {(page === 'login' || (!session && page !== 'setup')) && <Login />}
               {signedIn && page === 'home' && <HomeScreen />}
@@ -723,8 +723,7 @@ export function Vip() {
               {signedIn && page === 'book' && <BookScreen />}
               {signedIn && page === 'rewards' && <RewardsScreen />}
               {signedIn && page === 'news' && <NewsScreen />}
-            </motion.div>
-          </AnimatePresence>
+          </motion.div>
         </div>
         {signedIn && (
           <nav className="grid shrink-0 grid-cols-5 border-t border-cocoa/10 bg-white pt-1.5 pb-1">
