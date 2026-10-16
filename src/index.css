@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+@import '@fontsource/marcellus/400.css';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/500-italic.css';
+@import '@fontsource/jost/400.css';
+@import '@fontsource/jost/500.css';
+@import '@fontsource/jost/600.css';
+@import '@fontsource/jost/700.css';
+@import '@fontsource/noto-sans-myanmar/400.css';
+
+@theme {
+  --font-display: 'Marcellus', 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Jost', 'Noto Sans Myanmar', system-ui, sans-serif;
+
+  /* Stylist Beauty Mall brand — cocoa brown with a champagne-gold monogram (sampled from the logo) */
+  --color-cocoa: #76432e;
+  --color-cocoa-dark: #4a2a1d;
+  --color-cocoa-deep: #2c1912;
+  --color-gold: #fcd69f;
+  --color-gold-deep: #b98a4e;
+  --color-cream: #f8f2ea;
+  --color-sand: #efe4d6;
+  --color-ink: #2b1d16;
+  --color-viber: #7360f2;
+
+  /* presentation chrome */
+  --color-stage: #120c09;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-stage);
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A region of the website / VIP area that just changed from the dashboard */
+.flash {
+  animation: flash 2.6s ease-out;
+  border-radius: 6px;
+}
+@keyframes flash {
+  0%,
+  35% {
+    box-shadow:
+      0 0 0 3px rgb(252 214 159 / 0.95),
+      0 0 32px 8px rgb(236 180 90 / 0.6);
+    background-color: rgb(252 214 159 / 0.18);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(252 214 159 / 0);
+    background-color: transparent;
+  }
+}
+
+/* The element the presenter cursor is about to type into */
+.demo-target {
+  outline: 2px solid rgb(59 130 246 / 0.7);
+  outline-offset: 2px;
+  transition: outline-color 0.2s;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 0 0 / 0.18) transparent;
+}
