@@ -162,9 +162,9 @@ export const seedContent = (): SiteContent => ({
 })
 
 export const seedClients = (): Client[] => [
-  { id: 'c-thiri', name: 'Daw Thiri Aung', phone: '+95 9 420 118 220', username: 'thiri.aung', status: 'active', tier: 'platinum', since: '2022', spend12m: 4620000, progress: 120000, visits: 38 },
-  { id: 'c-khin', name: 'Ma Khin Hnin Wai', phone: '+95 9 777 301 554', username: 'khinhninwai', status: 'active', tier: 'gold', since: '2023', spend12m: 1980000, progress: 245000, visits: 21 },
-  { id: 'c-nwe', name: 'Daw Nwe Nwe San', phone: '+95 9 250 664 019', username: 'nwenwe', status: 'active', tier: 'gold', since: '2023', spend12m: 1640000, progress: 60000, visits: 17 },
+  { id: 'c-thiri', name: 'Daw Thiri Aung', phone: '+95 9 420 118 220', username: 'thiri.aung', status: 'active', tier: 'platinum', since: '2022', spend12m: 4620000, progress: 120000, visits: 38, app: true, push: true },
+  { id: 'c-khin', name: 'Ma Khin Hnin Wai', phone: '+95 9 777 301 554', username: 'khinhninwai', status: 'active', tier: 'gold', since: '2023', spend12m: 1980000, progress: 245000, visits: 21, app: true, push: true },
+  { id: 'c-nwe', name: 'Daw Nwe Nwe San', phone: '+95 9 250 664 019', username: 'nwenwe', status: 'active', tier: 'gold', since: '2023', spend12m: 1640000, progress: 60000, visits: 17, app: true },
   { id: 'c-phyu', name: 'Ma Phyu Phyu Thant', phone: '+95 9 450 112 233', username: 'phyuphyu', status: 'active', tier: 'silver', since: '2024', spend12m: 720000, progress: 190000, visits: 9 },
 ]
 

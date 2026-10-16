@@ -1,5 +1,5 @@
 import { demo, emptyBooking, type DemoState } from './store'
-import type { Booking, Client, LedgerLine, Service, ServiceCategory, SiteContent, Tier, VipNotice, VipPage } from './types'
+import type { AutoPushKey, Booking, Client, LedgerLine, PushAudience, Service, ServiceCategory, SiteContent, Tier, VipNotice, VipPage } from './types'
 import { iso } from './seed'
 import { money, fmtDate } from '../ui/format'
 
@@ -96,8 +96,26 @@ function addLine(s: DemoState, l: Omit<LedgerLine, 'id' | 'when'>) {
   s.ledger.unshift({ ...l, id: uid('l'), when: iso(0) })
 }
 
+const PUSH_KIND: Partial<Record<VipNotice['kind'], { key: AutoPushKey; page: VipPage }>> = {
+  booking: { key: 'booking', page: 'home' },
+  topup: { key: 'topup', page: 'wallet' },
+  cashback: { key: 'cashback', page: 'rewards' },
+}
+
+/** A notice in the VIP area — and, once she allowed notifications, a push on her phone. */
 function notify(s: DemoState, n: Omit<VipNotice, 'id' | 'time'>) {
   s.vip.notices.unshift({ ...n, id: uid('n'), time: clock() })
+  const auto = PUSH_KIND[n.kind]
+  if (auto && s.autoPush[auto.key]) pushToPhone(s, n.title, n.text, auto.page)
+}
+
+/** Deliver a VIP app notification to the demo phone (only after "Allow"). */
+function pushToPhone(s: DemoState, title: string, text: string, page: VipPage) {
+  if (s.phone.permission !== 'granted') return
+  const note = { id: uid('p'), app: 'vip' as const, title, text, time: 'now', page }
+  if (s.phone.screen === 'lock') s.phone.notifications.unshift(note)
+  else s.phone.banner = note
+  s.phone.buzz += 1
 }
 
 // ——— Viber (the salon's messages to customers) ———
@@ -106,7 +124,7 @@ export function sendViber(text: string, link?: { label: string; url: string; vip
   demo().update((s) => {
     const msg = { id: uid('v'), text, time: clock(), link }
     s.phone.viber.push(msg)
-    s.phone.banner = msg
+    s.phone.banner = { id: msg.id, app: 'viber', title: 'Stylist Beauty Mall', text, time: 'now' }
     s.phone.buzz += 1
   })
   demo().toast('Sent on Viber')
@@ -214,6 +232,7 @@ export function activateVip(clientId: string) {
     if (c) c.status = 'active'
     s.vip.session = clientId
     s.vipPage = 'home'
+    s.phone.installPrompt = true
     notify(s, { kind: 'welcome', title: 'Welcome to the VIP club', text: 'Top up your wallet, book in seconds and earn cash back on every visit.' })
   })
   demo().toast('VIP joined — account active')
@@ -387,3 +406,90 @@ export function uploadFiles(files: FileList) {
 }
 
 export const walletTotalHeld = (s: DemoState) => s.clients.reduce((sum, c) => sum + balance(s.ledger, c.id).total, 0)
+
+// ——— the VIP club on the home screen & notifications ———
+
+const sessionClient = (s: DemoState) => s.clients.find((c) => c.id === s.vip.session)
+
+export const openShare = () => demo().update((s) => void (s.phone.overlay = 'share'))
+export const openAddDialog = () => demo().update((s) => void (s.phone.overlay = 'add'))
+
+export function confirmAdd() {
+  demo().update((s) => {
+    s.phone.overlay = null
+    s.phone.installed = true
+    s.phone.installPrompt = false
+    s.phone.screen = 'home'
+    s.phone.banner = null
+    s.phone.iconPop += 1
+    const c = sessionClient(s)
+    if (c) c.app = true
+  })
+  demo().toast('VIP app added to a home screen')
+}
+
+/** Tap the home-screen icon: splash, then the VIP club full screen. */
+export function openApp(instant = false, page: VipPage = 'home') {
+  demo().update((s) => {
+    s.phone.screen = instant ? 'app' : 'splash'
+    s.phone.overlay = null
+    s.guestApp = 'vip'
+    s.vipPage = page
+  })
+  if (!instant) setTimeout(() => demo().phone.screen === 'splash' && demo().update((s) => void (s.phone.screen = 'app')), 1300)
+}
+
+export const askPermission = () => demo().update((s) => void (s.phone.overlay = 'permission'))
+
+export function allowNotifications() {
+  demo().update((s) => {
+    s.phone.overlay = null
+    s.phone.permission = 'granted'
+    const c = sessionClient(s)
+    if (c) c.push = true
+  })
+  demo().toast('Notifications on for a VIP')
+}
+
+export const lockPhone = () =>
+  demo().update((s) => {
+    s.phone.screen = 'lock'
+    s.phone.overlay = null
+    s.phone.banner = null
+  })
+
+/** Tap a notification: Viber opens the chat, a VIP push opens the app on its page. */
+export function tapNotification(id: string) {
+  const n = demo().phone.notifications.find((x) => x.id === id) ?? demo().phone.banner
+  demo().update((s) => {
+    s.phone.notifications = s.phone.notifications.filter((x) => x.id !== id)
+    s.phone.banner = null
+    if (n?.app === 'viber') {
+      s.phone.screen = 'viber'
+      return
+    }
+    s.phone.screen = 'app'
+    s.guestApp = 'vip'
+    s.vipPage = n?.page ?? 'home'
+    const last = s.sent[0]
+    if (last) last.opened += 1
+  })
+}
+
+export const setPush = <K extends keyof DemoState['push']>(key: K, value: DemoState['push'][K]) => demo().update((s) => void (s.push[key] = value))
+
+const AUDIENCE: Record<PushAudience, string> = { all: 'All VIP members', gold: 'Gold & Platinum', one: 'Ma Su Mon Kyaw' }
+export const audienceLabel = (a: PushAudience) => AUDIENCE[a]
+
+export const recipients = (s: DemoState, a: PushAudience) =>
+  s.clients.filter((c) => c.push && (a === 'all' || (a === 'gold' ? c.tier !== 'silver' : c.id === 'c-sumon')))
+
+/** Send the composed notification to every member in the audience who allowed notifications. */
+export function sendPush(id = uid('s')) {
+  demo().update((s) => {
+    const to = recipients(s, s.push.audience)
+    s.sent.unshift({ id, title: s.push.title, body: s.push.body, audience: AUDIENCE[s.push.audience], when: `Today ${clock()}`, delivered: to.length, opened: 0 })
+    if (to.some((c) => c.id === s.vip.session)) pushToPhone(s, s.push.title, s.push.body, s.push.page)
+  })
+  demo().toast(`Sent to ${demo().sent[0].delivered} members`)
+}

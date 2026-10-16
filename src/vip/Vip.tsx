@@ -5,6 +5,7 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Bell,
+  BellRing,
   CalendarCheck,
   CalendarPlus,
   Check,
@@ -36,6 +37,7 @@ import {
   submitTopup,
   submitVipBooking,
   activateVip,
+  askPermission,
   tierById,
 } from '../store/ops'
 import { Field } from '../site/Field'
@@ -297,6 +299,26 @@ function NextBooking() {
   )
 }
 
+/** Shown in the home-screen app until she allows notifications. */
+function NotifyPrompt() {
+  const show = useDemo((s) => s.phone.screen === 'app' && s.phone.permission === 'default')
+  if (!show) return null
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`${card} flex items-center gap-3 ring-1 ring-gold-deep/40`}>
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cocoa text-gold">
+        <BellRing size={18} />
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="text-[14px] font-semibold text-cocoa-dark">Turn on notifications</div>
+        <div className="text-[12px] leading-snug text-ink/55">Top-ups, booking reminders and cash back — the moment they happen.</div>
+      </div>
+      <button data-demo="v:notif-on" onClick={askPermission} className="shrink-0 rounded-full bg-cocoa px-3.5 py-2 text-[12.5px] font-semibold text-gold">
+        Turn on
+      </button>
+    </motion.div>
+  )
+}
+
 // ——— screens ———
 
 function HomeScreen() {
@@ -308,6 +330,7 @@ function HomeScreen() {
         <div className="text-[13px] text-ink/50">Mingalaba,</div>
         <div className="font-display text-[26px] leading-tight text-cocoa-dark">{c.name}</div>
       </div>
+      <NotifyPrompt />
       <WalletCard />
       <Notices />
       <NextBooking />

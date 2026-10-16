@@ -13,6 +13,7 @@ export type AdminSection =
   | 'clients'
   | 'wallet'
   | 'rewards'
+  | 'notify'
   | 'home'
   | 'services'
   | 'signature'
@@ -24,8 +25,9 @@ export type AdminSection =
 export type GuestApp = 'site' | 'vip'
 export type Device = 'phone' | 'desktop'
 export type Focus = 'split' | 'admin' | 'site'
-export type PhoneScreen = 'browser' | 'viber'
-export type PhoneOverlay = null | 'photos'
+/** browser = Safari · app = the VIP club opened from the home screen (full screen) */
+export type PhoneScreen = 'browser' | 'viber' | 'home' | 'splash' | 'app' | 'lock'
+export type PhoneOverlay = null | 'photos' | 'share' | 'add' | 'permission'
 
 // ——— website content (edited as a draft, live on Publish) ———
 
@@ -166,6 +168,10 @@ export interface Client {
   progress: number
   visits: number
   invite?: string
+  /** added the VIP club to the home screen */
+  app?: boolean
+  /** allowed notifications */
+  push?: boolean
 }
 
 export type LedgerKind = 'topup' | 'bonus' | 'payment' | 'cashback' | 'refund' | 'birthday' | 'adjust'
@@ -253,3 +259,35 @@ export interface InviteForm {
   tier: TierId
   created: string | null
 }
+
+/** A notification shown on the phone: a Viber message or a push from the VIP app. */
+export interface PhoneNotification {
+  id: string
+  app: 'viber' | 'vip'
+  title: string
+  text: string
+  time: string
+  /** VIP app page the notification opens */
+  page?: VipPage
+}
+
+export type PushAudience = 'all' | 'gold' | 'one'
+
+export interface PushDraft {
+  title: string
+  body: string
+  page: VipPage
+  audience: PushAudience
+}
+
+export interface SentPush {
+  id: string
+  title: string
+  body: string
+  audience: string
+  when: string
+  delivered: number
+  opened: number
+}
+
+export type AutoPushKey = 'booking' | 'reminder' | 'topup' | 'cashback' | 'birthday'

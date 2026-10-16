@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { CalendarDays, Check, Crown, Gift, House, Images, LayoutDashboard, Megaphone, Receipt, Scissors, Sparkles, Users, Wallet } from 'lucide-react'
+import { BellRing, CalendarDays, Check, Crown, Gift, House, Images, LayoutDashboard, Megaphone, Receipt, Scissors, Sparkles, Users, Wallet } from 'lucide-react'
 import { demo, isDirty, useDemo } from '../store/store'
 import type { AdminSection, ContentSection, PageId, VipPage } from '../store/types'
 import { Monogram } from '../ui/Logo'
@@ -10,6 +10,7 @@ import { Checkout } from './Checkout'
 import { Clients } from './Clients'
 import { WalletAdmin } from './Wallet'
 import { RewardsEditor } from './Rewards'
+import { NotifyAdmin } from './Notify'
 import { GalleryEditor, HomeEditor, NewsEditor, ServicesEditor, SignatureEditor, TeamEditor } from './editors'
 
 interface SectionDef {
@@ -30,6 +31,7 @@ export const SECTIONS: SectionDef[] = [
   { id: 'clients', label: 'VIP clients', icon: Crown, title: 'VIP clients', subtitle: 'Invite members, see balances, tiers and visits' },
   { id: 'wallet', label: 'Wallet & top-ups', icon: Wallet, title: 'Wallet & top-ups', subtitle: 'Cash at the counter, transfer approvals and every wallet line' },
   { id: 'rewards', label: 'Rewards', icon: Gift, title: 'Rewards settings', subtitle: 'Cash back, tiers and top-up bonuses — change them any time', content: 'rewards', vip: 'rewards' },
+  { id: 'notify', label: 'Notifications', icon: BellRing, title: 'Notifications', subtitle: 'Reach VIPs on their phones — the VIP club works like an app on their home screen' },
   { id: 'home', label: 'Home page', icon: House, title: 'Home page', subtitle: 'The first impression of stylistbeautymall.com', content: 'home', page: 'home' },
   { id: 'services', label: 'Services & prices', icon: Scissors, title: 'Services & prices', subtitle: 'What customers can book, how long it takes and what it costs', content: 'services', page: 'services' },
   { id: 'signature', label: 'Signature care', icon: Sparkles, title: 'Signature care', subtitle: 'Hair & scalp analysis and the pure water system', content: 'signature', page: 'scalp' },
@@ -41,7 +43,7 @@ export const SECTIONS: SectionDef[] = [
 const GROUPS: { label: string; ids: AdminSection[] }[] = [
   { label: '', ids: ['today'] },
   { label: 'Salon', ids: ['bookings', 'checkout'] },
-  { label: 'VIP club', ids: ['clients', 'wallet', 'rewards'] },
+  { label: 'VIP club', ids: ['clients', 'wallet', 'rewards', 'notify'] },
   { label: 'Website', ids: ['home', 'services', 'signature', 'team', 'gallery', 'news'] },
 ]
 
@@ -164,6 +166,7 @@ export function Admin() {
               {active === 'clients' && <Clients />}
               {active === 'wallet' && <WalletAdmin />}
               {active === 'rewards' && <RewardsEditor />}
+              {active === 'notify' && <NotifyAdmin />}
               {active === 'home' && <HomeEditor />}
               {active === 'services' && <ServicesEditor />}
               {active === 'signature' && <SignatureEditor />}

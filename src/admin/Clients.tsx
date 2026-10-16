@@ -1,6 +1,6 @@
 import { useShallow } from 'zustand/react/shallow'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, Copy, Crown, Link2, UserPlus } from 'lucide-react'
+import { BellRing, Check, Copy, Crown, Link2, Smartphone, UserPlus } from 'lucide-react'
 import { demo, useDemo } from '../store/store'
 import type { InviteForm, TierId } from '../store/types'
 import { balance, createInvite, inviteMessage, sendViber, tierById } from '../store/ops'
@@ -149,7 +149,11 @@ export function Clients() {
                   <Crown size={10} /> {t.name}
                 </Pill>
               </span>
-              <span>{c.status === 'active' ? <Pill tone="emerald">Active</Pill> : <Pill tone="amber">Invited</Pill>}</span>
+              <span className="flex items-center gap-1.5">
+                {c.status === 'active' ? <Pill tone="emerald">Active</Pill> : <Pill tone="amber">Invited</Pill>}
+                {c.app && <Smartphone size={14} className="text-cocoa" aria-label="App on home screen" />}
+                {c.push && <BellRing size={14} className="text-cocoa" aria-label="Notifications on" />}
+              </span>
               <span className="text-right font-semibold">{money(b.total)}</span>
               <span className="text-right text-zinc-600">{c.visits}</span>
             </motion.button>

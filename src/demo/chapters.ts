@@ -22,6 +22,16 @@ import {
   submitTopup,
   submitVipBooking,
   toggleDayOff,
+  confirmAdd,
+  lockPhone,
+  openAddDialog,
+  openApp,
+  openShare,
+  askPermission,
+  allowNotifications,
+  sendPush,
+  setPush,
+  tapNotification,
 } from '../store/ops'
 import { goVip, setPassword, setVipBooking, toggleVipService } from '../vip/Vip'
 import { selectBooking, startCheckout } from '../admin/Bookings'
@@ -115,6 +125,20 @@ function addSuMon(lines: Omit<LedgerLine, 'id' | 'client'>[] = [], extra: { prog
     s.guestApp = 'vip'
     s.vipPage = 'home'
     s.adminUi.selectedClient = SUMON
+  })
+}
+
+/** Su Mon already has the VIP club on her home screen with notifications on. */
+function withApp() {
+  demo().update((s) => {
+    s.phone.installed = true
+    s.phone.permission = 'granted'
+    s.phone.screen = 'app'
+    const c = s.clients.find((x) => x.id === SUMON)
+    if (c) {
+      c.app = true
+      c.push = true
+    }
   })
 }
 
@@ -335,12 +359,95 @@ export const CHAPTERS: Chapter[] = [
   },
 
   {
+    id: 'app',
+    title: 'VIP app & notifications',
+    short: 'App',
+    kind: 'demo',
+    view: { admin: 'notify', app: 'vip', vip: 'home', device: 'phone', phone: 'browser' },
+    setup: () => {
+      addSuMon()
+      demo().update((s) => void (s.phone.installPrompt = true))
+    },
+    steps: [
+      {
+        title: 'Add to Home Screen',
+        caption: 'Su Mon adds the VIP club to her home screen — no app store',
+        notes: ['The VIP area invites her to keep it on her phone right after her first login.', 'Works on iPhone and Android, no App Store or Play Store, no fees.'],
+        view: { admin: 'notify', vip: 'home', phone: 'browser' },
+        script: [wait(900), tap('p:banner-add', openShare), wait(500), tap('p:a2hs', openAddDialog), wait(500), tap('p:add-confirm', confirmAdd), wait(1300)],
+      },
+      {
+        title: 'Opens like an app',
+        caption: 'One tap — the VIP club opens full screen, like an app',
+        notes: ['Gold monogram icon and splash screen in the salon’s colours.', 'Same VIP area as on the web — one place to update.'],
+        view: { admin: 'notify', phone: 'home' },
+        script: [wait(400), tap('p:icon', () => openApp()), wait(1900)],
+      },
+      {
+        title: 'Allow notifications',
+        caption: 'She allows notifications — the salon can now reach her directly',
+        notes: ['Every member with notifications on is counted in the Studio.', 'Members can switch them off any time in their phone settings.'],
+        view: { admin: 'notify', vip: 'home', phone: 'app' },
+        script: [tap('v:notif-on', askPermission), wait(800), tap('p:allow', allowNotifications), act(() => demo().glow(['admin.push', 'admin.app'])), wait(1000)],
+      },
+      {
+        title: 'Send a notification',
+        caption: 'Write it once — it lands on every VIP’s lock screen',
+        notes: ['Choose who receives it: all members, Gold & Platinum, or one person.', 'Choose what opens when they tap it.'],
+        view: { admin: 'notify', vip: 'home', phone: 'app' },
+        script: [
+          field('a:push-title', 'VIP evening: keratin scalp ritual ✨', (v) => setPush('title', v)),
+          field('a:push-body', 'Be the first to try our new ritual — only 12 seats. Tap for the details.', (v) => setPush('body', v)),
+          tap('a:push-page:news', () => setPush('page', 'news')),
+          act(lockPhone),
+          wait(700),
+          tap('a:push-send', () => sendPush('s-demo')),
+          wait(1600),
+        ],
+      },
+      {
+        title: 'Tap to open',
+        caption: 'One tap opens the VIP club right on the news',
+        notes: ['Top-ups, bookings and cash back send their own notifications automatically — as we will see next.'],
+        view: { admin: 'notify', phone: 'lock' },
+        script: [
+          act(
+            () => undefined,
+            () => {
+              if (!demo().phone.notifications.length) {
+                setPush('title', 'VIP evening: keratin scalp ritual ✨')
+                setPush('body', 'Be the first to try our new ritual — only 12 seats. Tap for the details.')
+                setPush('page', 'news')
+                sendPush('s-demo')
+              }
+            },
+          ),
+          {
+            t: 'click',
+            target: 'p:notif',
+            run: () => {
+              const n = demo().phone.notifications[0]
+              if (n) tapNotification(n.id)
+            },
+          },
+          wait(500),
+          act(() => demo().glow(['news.items.n2']), () => undefined),
+          wait(1500),
+        ],
+      },
+    ],
+  },
+
+  {
     id: 'wallet',
     title: 'Wallet top-up',
     short: 'Top-up',
     kind: 'demo',
-    view: { admin: 'wallet', app: 'vip', vip: 'home', device: 'phone', phone: 'browser' },
-    setup: () => addSuMon(),
+    view: { admin: 'wallet', app: 'vip', vip: 'home', device: 'phone', phone: 'app' },
+    setup: () => {
+      addSuMon()
+      withApp()
+    },
     steps: [
       {
         title: 'Cash at the counter',
@@ -397,8 +504,11 @@ export const CHAPTERS: Chapter[] = [
     title: 'Book & cash back',
     short: 'Cash back',
     kind: 'demo',
-    view: { admin: 'bookings', app: 'vip', vip: 'book', device: 'phone', phone: 'browser' },
-    setup: () => addSuMon(SUMON_HISTORY, { progress: 160000, spend12m: 210000, visits: 1 }),
+    view: { admin: 'bookings', app: 'vip', vip: 'book', device: 'phone', phone: 'app' },
+    setup: () => {
+      addSuMon(SUMON_HISTORY, { progress: 160000, spend12m: 210000, visits: 1 })
+      withApp()
+    },
     steps: [
       {
         title: 'VIP books in seconds',
@@ -454,8 +564,11 @@ export const CHAPTERS: Chapter[] = [
     title: 'Your rules',
     short: 'Rules',
     kind: 'demo',
-    view: { admin: 'news', app: 'vip', vip: 'home', device: 'phone', phone: 'browser' },
-    setup: () => addSuMon(SUMON_HISTORY, { progress: 160000, spend12m: 210000, visits: 1 }),
+    view: { admin: 'news', app: 'vip', vip: 'home', device: 'phone', phone: 'app' },
+    setup: () => {
+      addSuMon(SUMON_HISTORY, { progress: 160000, spend12m: 210000, visits: 1 })
+      withApp()
+    },
     steps: [
       {
         title: 'Members-only news',

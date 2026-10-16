@@ -29,7 +29,7 @@ The stage is designed at 1920×1080 and scales to any laptop or projector.
 | → / Space / PageDown | Next step (plays it) — works with presentation clickers |
 | ← / PageUp | Previous step |
 | R or Enter | Replay the current step |
-| 0 – 7 | Jump to a chapter |
+| 0 – 8 | Jump to a chapter |
 | D | Switch the customer view between phone and desktop |
 | S / A / W | Side by side / Studio only / customer only |
 | N | Presenter notes (talking points for each step) |
@@ -49,10 +49,11 @@ VIP area. Gallery → *Upload photos* opens your real files. Moving to another s
 1. **Your website** — headline & hero photo, announcement bar, scalp analysis page, prices & a new service, news
 2. **Online booking** — a customer books on the phone (service → stylist → free time), staff confirm and send a ready-made Viber message, a stylist's day off blocks online booking
 3. **VIP invitation** — staff create the VIP, send the invitation link on Viber, the VIP sets her own password
-4. **Wallet top-up** — cash at the counter (bonus added automatically), transfer + screenshot from the phone, staff approve
-5. **Book & cash back** — VIP books with priority, checkout from the wallet, cash back when she crosses 300,000 Ks, rewards progress
-6. **Your rules** — members-only news, change a top-up bonus, the numbers at a glance
-7. **Summary** — benefits (click to replay a chapter) and next steps
+4. **VIP app & notifications** — she adds the VIP club to her home screen, it opens full screen like an app, she allows notifications; the salon sends one to the lock screen and a tap opens the news
+5. **Wallet top-up** — cash at the counter (bonus added automatically), transfer + screenshot from the phone, staff approve — each arrives as a notification
+6. **Book & cash back** — VIP books with priority, checkout from the wallet, cash back when she crosses 300,000 Ks, rewards progress
+7. **Your rules** — members-only news, change a top-up bonus, the numbers at a glance
+8. **Summary** — benefits (click to replay a chapter) and next steps
 
 The scope behind the demo (three parts, loyalty rules, phases) is in the project scope document.
 
@@ -75,6 +76,6 @@ React + TypeScript + Vite, Tailwind CSS, Zustand (one shared store — the Studi
 - `src/vip/` — VIP members area `vip.stylistbeautymall.com` (mobile-first, installable web app)
 - `src/admin/` — Stylist Studio `staff.stylistbeautymall.com`
 - `src/store/ops.ts` — salon rules: free time slots, wallet ledger, top-up bonus, checkout and cash back
-- `src/device/` — iPhone (Safari, Viber chat, photo picker, notifications) and desktop browser frames
+- `src/device/` — iPhone (Safari, Add to Home Screen, home screen, lock screen, notifications, Viber chat, photo picker) and desktop browser frames
 - `src/demo/` — step scripts and the runner that drives the presenter cursor
 - `src/stage/` — presentation chrome, slides, keyboard controls

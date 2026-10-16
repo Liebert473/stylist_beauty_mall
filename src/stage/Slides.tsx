@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
+  BellRing,
   CalendarCheck,
   CalendarX,
   Crown,
@@ -98,7 +99,7 @@ function Today() {
 function Platform() {
   const cards = [
     { icon: Globe, t: 'Public website', u: 'stylistbeautymall.com', d: 'Services, prices, scalp analysis, pure water, team, gallery — and online booking for everyone.' },
-    { icon: Crown, t: 'VIP club', u: 'vip.stylistbeautymall.com', d: 'By invitation. Wallet top-ups, priority booking, cash back, tiers and members-only news.' },
+    { icon: Crown, t: 'VIP club', u: 'vip.stylistbeautymall.com', d: 'By invitation. On the home screen with notifications: wallet top-ups, priority booking, cash back, tiers and members-only news.' },
     { icon: LayoutDashboard, t: 'Stylist Studio', u: 'staff.stylistbeautymall.com', d: 'Bookings, checkout, top-up approvals, VIP clients and every page of the website.' },
   ]
   return (
@@ -122,21 +123,21 @@ function Platform() {
   )
 }
 
-const CHAPTER_ICONS = [PenLine, CalendarCheck, Crown, Wallet, Receipt, Gift]
+const CHAPTER_ICONS = [PenLine, CalendarCheck, Crown, BellRing, Wallet, Receipt, Gift]
 
 function Agenda() {
   return (
     <Frame>
       <Kicker>Live demo</Kicker>
       <H>Left: your team. Right: your customers.</H>
-      <div className="mt-14 grid grid-cols-6 gap-5">
-        {CHAPTERS.slice(1, 7).map((c, i) => {
+      <div className="mt-14 grid grid-cols-7 gap-4">
+        {CHAPTERS.slice(1, 8).map((c, i) => {
           const Icon = CHAPTER_ICONS[i]
           return (
             <button key={c.id} onClick={() => goTo(i + 1, 0)} className="rounded-2xl bg-white/[0.07] p-6 text-left ring-1 ring-white/10 transition hover:bg-white/[0.12] hover:ring-gold/60">
               <div className="text-[18px] font-bold text-gold">0{i + 1}</div>
               <Icon size={36} className="mt-5 text-white/90" strokeWidth={1.5} />
-              <div className="mt-5 text-[24px] leading-tight font-bold">{c.title}</div>
+              <div className="mt-5 text-[22px] leading-tight font-bold">{c.title}</div>
               <div className="mt-3 text-[16px] text-white/55">{c.steps.length} steps →</div>
             </button>
           )
@@ -151,15 +152,17 @@ function Benefits() {
     { icon: PenLine, t: 'Update the website yourselves', c: 1 },
     { icon: CalendarCheck, t: 'Bookings day and night', c: 2 },
     { icon: Crown, t: 'An exclusive VIP club', c: 3 },
-    { icon: Wallet, t: 'Prepaid credit, cash in first', c: 4 },
-    { icon: Sparkles, t: 'Cash back that brings VIPs back', c: 5 },
-    { icon: Zap, t: 'Your rules, changed any time', c: 6 },
+    { icon: BellRing, t: 'On every VIP’s home screen', c: 4 },
+    { icon: Wallet, t: 'Prepaid credit, cash in first', c: 5 },
+    { icon: Sparkles, t: 'Cash back that brings VIPs back', c: 6 },
+    { icon: Zap, t: 'Your rules, changed any time', c: 7 },
+    { icon: Heart, t: 'Your brand, on every screen', c: 1 },
   ]
   return (
     <Frame>
       <Kicker>Summary</Kicker>
       <H>Easy to run. Hard to leave.</H>
-      <div className="mt-14 grid grid-cols-3 gap-6">
+      <div className="mt-14 grid grid-cols-4 gap-6">
         {items.map((it) => (
           <button key={it.t} onClick={() => goTo(it.c, 0)} className="flex items-center gap-5 rounded-2xl bg-white/[0.07] p-7 text-left ring-1 ring-white/10 transition hover:ring-gold/60">
             <it.icon size={38} className="shrink-0 text-gold" strokeWidth={1.5} />

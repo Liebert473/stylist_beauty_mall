@@ -56,7 +56,7 @@ function useKeyboard() {
       else if (k === 'ArrowLeft' || k === 'PageUp') prev()
       else if (k === 'r' || k === 'R' || k === 'Enter') replay()
       else if (k === 'Escape') stop()
-      else if (/^[0-7]$/.test(k)) goTo(Number(k), 0)
+      else if (/^[0-8]$/.test(k)) goTo(Number(k), 0)
       else if (k === 'd' || k === 'D') toggleDevice()
       else if (k === 's' || k === 'S') setFocus('split')
       else if (k === 'a' || k === 'A') setFocus('admin')
@@ -244,7 +244,7 @@ function Notes() {
           <div className="mt-5 flex items-start gap-2 border-t border-white/10 pt-4 text-[13px] leading-relaxed text-white/50">
             <Keyboard size={15} className="mt-0.5 shrink-0" />
             <span>
-              → / Space next · ← back · R replay · 0–7 chapters · D phone/desktop · S / A / W layout · P auto · F full screen · Esc stop
+              → / Space next · ← back · R replay · 0–8 chapters · D phone/desktop · S / A / W layout · P auto · F full screen · Esc stop
             </span>
           </div>
         </motion.div>
@@ -356,7 +356,13 @@ function DemoView() {
           {showAdmin && <SyncPulse />}
           <PanelLabel>
             {device === 'phone' ? <Smartphone size={16} /> : <Monitor size={16} />}{' '}
-            {device === 'phone' && screen === 'viber' ? 'Your customer · Viber' : app === 'vip' ? 'Your VIP · vip.stylistbeautymall.com' : 'Your customers · stylistbeautymall.com'}
+            {device === 'phone' && screen === 'viber'
+              ? 'Your customer · Viber'
+              : device === 'phone' && (screen === 'home' || screen === 'lock' || screen === 'splash' || screen === 'app')
+                ? 'Your VIP · Stylist VIP app'
+                : app === 'vip'
+                  ? 'Your VIP · vip.stylistbeautymall.com'
+                  : 'Your customers · stylistbeautymall.com'}
           </PanelLabel>
           <div className="min-h-0 flex-1">
             {device === 'phone' ? (

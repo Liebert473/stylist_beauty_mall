@@ -20,6 +20,10 @@ import type {
   SiteContent,
   TopupForm,
   TopupRequest,
+  AutoPushKey,
+  PhoneNotification,
+  PushDraft,
+  SentPush,
   ViberMessage,
   VipBookingForm,
   VipNotice,
@@ -58,11 +62,23 @@ export interface DemoState {
   phone: {
     screen: PhoneScreen
     overlay: PhoneOverlay
-    /** a Viber notification dropping in from the top */
-    banner: ViberMessage | null
+    /** a notification dropping in from the top (Viber message or VIP app push) */
+    banner: PhoneNotification | null
     buzz: number
     viber: ViberMessage[]
+    /** the VIP club was added to the home screen */
+    installed: boolean
+    permission: 'default' | 'granted'
+    /** the "add to home screen" invitation inside the VIP area */
+    installPrompt: boolean
+    /** notifications waiting on the lock screen */
+    notifications: PhoneNotification[]
+    iconPop: number
   }
+
+  push: PushDraft
+  sent: SentPush[]
+  autoPush: Record<AutoPushKey, boolean>
 
   vip: {
     /** logged-in client */
@@ -124,7 +140,23 @@ export const initialState = (): Omit<DemoState, 'chapter' | 'step' | 'notesOpen'
   guestApp: 'site',
   device: 'desktop',
   focus: 'split',
-  phone: { screen: 'browser', overlay: null, banner: null, buzz: 0, viber: [] },
+  phone: {
+    screen: 'browser',
+    overlay: null,
+    banner: null,
+    buzz: 0,
+    viber: [],
+    installed: false,
+    permission: 'default',
+    installPrompt: false,
+    notifications: [],
+    iconPop: 0,
+  },
+  push: { title: '', body: '', page: 'news', audience: 'all' },
+  sent: [
+    { id: 'p0', title: 'Your birthday gift is here 🎁', body: '10,000 Ks credit added for your birthday month.', audience: 'Ma Khin Hnin Wai', when: 'Last week', delivered: 1, opened: 1 },
+  ],
+  autoPush: { booking: true, reminder: true, topup: true, cashback: true, birthday: true },
   vip: { session: null, notices: [], password: '', password2: '', celebrate: 0 },
   bookings: seedBookings(),
   clients: seedClients(),
